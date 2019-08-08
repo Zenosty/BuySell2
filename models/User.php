@@ -48,7 +48,7 @@ class User extends Model {
         $password = hash('ripemd160', $password);
 
         //set up the SQL query strings
-        $SQL1 = "SELECT FirstName,LastName,Email,Admin FROM users WHERE Email='$email' AND Password='$password'";
+        $SQL1 = "SELECT UserID, FirstName,LastName,Email,Admin FROM users WHERE Email='$email' AND Password='$password'";
 
         //execute the queries to get the 2 resultsets
         $rs1 = $this->db->query($SQL1); //query the lecturer table
@@ -57,11 +57,13 @@ class User extends Model {
         {
             $row = $rs1->fetch_assoc();
 
-            if ($row{'Admin'} = 1)
+            if ($row['Admin'] == 1)
             {
+                $this->session->setUserId($row['UserID']);
                 $this->session->setUserEmail($row['Email']);
                 $this->session->setUserFirstName($row['FirstName']);
                 $this->session->setUserLastName($row['LastName']);
+                $this->session->setUserType('LECTURER');
                 $this->session->setLoggedinState(TRUE);
 
                 $this->email = $email;
@@ -74,8 +76,9 @@ class User extends Model {
                 return TRUE;
 
             }
-            elseif ($row['Admin'] = 0)
+            elseif ($row['Admin'] == 0)
             { //Customer has logged on
+                $this->session->setUserId($row['UserID']);
                 $this->session->setUserEmail($row['Email']);
                 $this->session->setUserFirstName($row['FirstName']);
                 $this->session->setUserLastName($row['LastName']);

@@ -13,7 +13,9 @@
  * 
  */
 
+
 session_start(); //join/start a session between the browser client and Apache web server
+//session_destroy();
 
 //load application configuration
 include_once 'config/config.php';
@@ -65,14 +67,12 @@ if($user->getLoggedInState()){
             $controller=new GeneralController($user,$db);
         break;
     }
-    
 }
 else{
     //user is not logged in
     //create new general/not logged in controller
     $controller=new GeneralController($user,$db);
 }
-
 //run the application
 $controller->run();
 
